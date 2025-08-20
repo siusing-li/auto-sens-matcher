@@ -1,11 +1,5 @@
-#include <windows.h>
-#include <stdio.h>
-#include <math.h>
-#include <dinput.h>
+#include "revolution.h"
 
-// Initialize DirectInput method
-LPDIRECTINPUT8 pDI;          // DirectInput interface
-LPDIRECTINPUTDEVICE8 pMouse; // Mouse device
 void moveMouseRelative(int dx, int dy)
 {
     INPUT input = {0};
@@ -23,7 +17,6 @@ void moveMouseRelative(int dx, int dy)
      SetCursorPos(currentPos.x + x, currentPos.y + y);
  }*/
 
-// Function to check if both Alt and Backspace keys are pressed
 int checkHotkeyPressed()
 {
     // Check if Alt key (VK_MENU) and Insert (VK_INSERT) are pressed

@@ -1,17 +1,19 @@
 #include "binary.h"
 #include "global.h"
 #include "mpfr.h"
-#include "input.h"
+#include "stream.h"
 #include "revolution.h"
 
 // input: 
-//     base sens
-//     too low
-//     too high
-//     perfect
-// output
-//     current sens to test
-//     perfect sens
+//    base sens
+//    min sens
+//    max sens
+//    too low
+//    too high
+//    perfect
+// output:
+//    current sens to test
+//    perfect sens
 
 int main() {
     mpfr_t base_number; // number to start with
@@ -81,9 +83,7 @@ int main() {
             );
 
             // print the change, reset the loop
-            mpfr_printf("Low Number: %s\n", mpfr_to_str(&low_number, BIT_PRECISION));
-            mpfr_printf("High Number: %s\n", mpfr_to_str(&high_number, BIT_PRECISION));
-            mpfr_printf(COLOR_GREEN "Current Number: %s" COLOR_RESET "\n", mpfr_to_str(&current_number, BIT_PRECISION));
+            printCurrentNumbers(&low_number, &high_number, &current_number);
 
             copy_to_clipboard(mpfr_to_str(&current_number, BIT_PRECISION));
 
@@ -102,14 +102,14 @@ int main() {
         resetLowHighLoop(&current_number, input);
 
         if (mpfr_eq(current_number, low_number, BIT_PRECISION) && mpfr_eq(current_number, high_number, BIT_PRECISION)) {
-            printf("Your number is accurate up to ~120 digits.\n");
+            printf("Your number is already accurate up to ~120 digits.\n");
             break;
         }
     }
 
-    mpfr_printf("Low Number: %s\n", mpfr_to_str(&low_number, BIT_PRECISION));
-    mpfr_printf("High Number: %s\n", mpfr_to_str(&high_number, BIT_PRECISION));
-    mpfr_printf(COLOR_GREEN "YOUR Number: %s" COLOR_RESET "\n", mpfr_to_str(&current_number, BIT_PRECISION));
+    printCurrentNumbers(&low_number, &high_number, &current_number);
+
+    // TODO: add accuracy measurements, print the number is perfect
 
     mpfr_clears(base_number, current_number, low_number, high_number, prev_curr, prev_low, prev_high, prev_prev_curr, prev_prev_low, prev_prev_high, NULL);
     mpfr_free_cache();
@@ -158,16 +158,4 @@ void resetLowHighLoop(mpfr_t *current_number, char *input) {
     // reset the loop, part 2
     // clear input string
     memset(input, '\0', BUFFER_SIZE);
-}
-
-void copy_to_clipboard(const char *text) {
-    const size_t len = strlen(text) + 1;
-    HGLOBAL hMem = GlobalAlloc(GMEM_MOVEABLE, len);
-    memcpy(GlobalLock(hMem), text, len);
-    GlobalUnlock(hMem);
-
-    OpenClipboard(0);
-    EmptyClipboard();
-    SetClipboardData(CF_TEXT, hMem);
-    CloseClipboard();
 }

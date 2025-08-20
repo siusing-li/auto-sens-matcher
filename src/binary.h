@@ -31,9 +31,5 @@ void resetLowHighLoop(mpfr_t *current_number, char *input);
 // translate mpfr to string
 char* mpfr_to_str(mpfr_t *val, int precision);
 
-// copy "new" value to clipboard
-void copy_to_clipboard(const char *text);
-
-
 
 #endif // BINARY_H

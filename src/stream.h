@@ -1,5 +1,5 @@
-#ifndef INPUT_H
-#define INPUT_H
+#ifndef STREAM_H
+#define STREAM_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -45,4 +45,10 @@ void askStringUserInput(
 // ask user, set min, base, and max number
 void askInitialValues(mpfr_t *current_number, mpfr_t *low_number, mpfr_t *high_number, mpfr_t *base_number);
 
-#endif // INPUT_H
+// copy string value to clipboard
+void copy_to_clipboard(const char *text);
+
+// print all current state of numbers
+void printCurrentNumbers(mpfr_t *low_number, mpfr_t *high_number, mpfr_t *current_number);
+
+#endif // STREAM_H

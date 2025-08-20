@@ -1,7 +1,8 @@
-#include "input.h"
+#include "stream.h"
+#include "mpfr.h"
 
 bool is_valid_float_string(char *str) {
-    int i = 0;
+    size_t i = 0;
     bool has_digit = false, has_dot = false;
 
     // Optional leading sign
@@ -93,11 +94,11 @@ void askStringUserInput(char **prompt, char *input, char **valid_inputs_list, co
             trim_newline(buffer);
             trim_whitespace(buffer);
             
-            for (int i = 0; buffer[i]; i++) {
+            for (size_t i = 0; buffer[i]; i++) {
                 buffer[i] = tolower(buffer[i]);
             }
 
-            for (int i = 0; i < list_size; i++) {
+            for (size_t i = 0; i < list_size; i++) {
                 if (strcmp(buffer, valid_inputs_list[i]) == 0) {
                     strcpy(input, buffer);
 
@@ -148,3 +149,23 @@ void askInitialValues(mpfr_t *current_number, mpfr_t *low_number, mpfr_t *high_n
     }
     mpfr_printf("MAX number set to: %s\n", mpfr_to_str(high_number, BIT_PRECISION));
 }
+
+
+void copy_to_clipboard(const char *text) {
+    const size_t len = strlen(text) + 1;
+    HGLOBAL hMem = GlobalAlloc(GMEM_MOVEABLE, len);
+    memcpy(GlobalLock(hMem), text, len);
+    GlobalUnlock(hMem);
+
+    OpenClipboard(0);
+    EmptyClipboard();
+    SetClipboardData(CF_TEXT, hMem);
+    CloseClipboard();
+}
+
+void printCurrentNumbers(mpfr_t *low_number, mpfr_t *high_number, mpfr_t *current_number) {
+    mpfr_printf("Low Number: %s\n", mpfr_to_str(low_number, BIT_PRECISION));
+    mpfr_printf("High Number: %s\n", mpfr_to_str(high_number, BIT_PRECISION));
+    mpfr_printf(COLOR_GREEN "YOUR NUMBER: %s" COLOR_RESET "\n", mpfr_to_str(current_number, BIT_PRECISION));
+}
+
