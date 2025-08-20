@@ -1,0 +1,34 @@
+CC = gcc
+
+# add compiler flags
+CFLAGS = -Wall -Wextra -lmpfr -lgmp -g
+
+# add the directory of your source files
+SRC_DIR = ./src
+OBJ_DIR = ./obj
+
+# add your source files here
+SRCS = binary.c mpfr.c stream.c 
+
+# converts the source files to object files
+OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
+
+# add your executable filename here
+EXE = binary
+
+# Create the obj directory
+$(shell mkdir -p $(OBJ_DIR))
+
+all: $(EXE)
+
+# Compile the corresponding object file of any src .c file
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) -c $< -o $@ $(CFLAGS)
+
+# create executable with all object files linked
+$(EXE): $(OBJS)
+	$(CC) $(OBJS) -o $(EXE) $(CFLAGS)
+
+clean:
+	rm -f $(OBJ_DIR)/*.o $(EXE)
+	rmdir $(OBJ_DIR)
