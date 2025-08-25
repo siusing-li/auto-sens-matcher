@@ -1,14 +1,15 @@
 CC = gcc
 
 # add compiler flags
-CFLAGS = -Wall -Wextra -lmpfr -lgmp -g
+CFLAGS = -Wall -Wextra -IC:/opencv_2.4/opencv/build/include -g 
+LINKFLAGS = -lmpfr -lgmp -LC:/opencv_2.4/opencv/build/x64/vc14/lib -lopencv_core2413 -lopencv_highgui2413 -lopencv_imgproc2413 
 
 # add the directory of your source files
 SRC_DIR = ./src
 OBJ_DIR = ./obj
 
 # add your source files here
-SRCS = revolution.c
+SRCS = revolution.c panorama.c vision.c
 
 # converts the source files to object files
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
@@ -27,8 +28,10 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 # create executable with all object files linked
 $(EXE): $(OBJS)
-	$(CC) $(OBJS) -o $(EXE) $(CFLAGS)
+	$(CC) $(OBJS) -o $(EXE) $(LINKFLAGS)
 
 clean:
 	rm -f $(OBJ_DIR)/*.o $(EXE)
 	rmdir $(OBJ_DIR)
+
+# cl main.c /I C:\opencv\build\include /I C:\opencv\build\include\opencv /I C:\opencv\build\include\opencv2 ^ /link /LIBPATH:C:\opencv\build\x64\vc12\lib opencv_core249.lib opencv_highgui249.lib opencv_imgproc249.lib

@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <dinput.h>
+#include "panorama.h"
 
 // Initialize DirectInput method
 LPDIRECTINPUT8 pDI;          // DirectInput interface

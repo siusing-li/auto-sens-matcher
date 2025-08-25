@@ -8,3 +8,5 @@
 * Uses computer vision to detect whether current sensitivity’s revolution is too low or high in real time
 * Develop support to undo actions and exit safely
 * Implementation of threads to run multiple features and functions concurrently
+
+Some features not yet implemented

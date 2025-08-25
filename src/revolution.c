@@ -81,7 +81,7 @@ int main()
     {
         if (checkHotkeyPressed())
         {
-            printf("hotkey pressed! simulating revolution...\n");
+            printf("Hotkey pressed! Simulating revolution...\n");
 
             // perform mouse revolution 
             for (int i = 0; i < steps_needed; i++)
@@ -90,14 +90,14 @@ int main()
                 Sleep(1);
             }
 
-            // perform inaccuracy mouse adjustment
+            // fix inaccuracy, perform (-inaccuracy) mouse adjustment
             if (inaccuracy > 0)
             {
                 printf("inaccuracy adjustment %d\n", -inaccuracy);
                 moveMouseRelative(-inaccuracy, 0);
             }
 
-            // perform fractional accuracy adjustment
+            // perform fractional mouse movement
             // mouse movement function does not allow moving (decimal) amount of pixels
             // at n revolutions, if fractional
             fractional_sum += total_counts_fractional;
@@ -114,6 +114,6 @@ int main()
 
         Sleep(30); // reduce cpu usage
     }
-    printf("done.\n");
+    printf("Done.\n");
     return 0;
 }
