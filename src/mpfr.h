@@ -9,6 +9,7 @@
 #include <stdbool.h>
 #include <mpfr.h>
 
+// convert an mpfr to string, without trailing zeros
 char* mpfr_to_str(mpfr_t *val, int precision);
 
 #endif // MPFR_H

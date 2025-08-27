@@ -58,7 +58,6 @@ int main() {
             mpfr_set(low_number, current_number, MPFR_RNDN);
         } else if (strcmp(input, "h") == 0 || strcmp(input, "high") == 0) {
             printf("Too high, adjusting value:\n");
-
             trickleDownPreviousState(
                 &current_number, &low_number, &high_number, 
                 &prev_curr, &prev_low, &prev_high, 
