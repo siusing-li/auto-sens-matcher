@@ -19,10 +19,16 @@ void moveMouseRelative(int dx, int dy)
      SetCursorPos(currentPos.x + x, currentPos.y + y);
  }*/
 
-int checkHotkeyPressed()
+int checkSingleHotkeyPressed()
 {
     // Check if Alt key (VK_MENU) and Insert (VK_INSERT) are pressed
     return (GetAsyncKeyState(VK_MENU) & 0x8000) && (GetAsyncKeyState(VK_INSERT) & 0x8000);
+}
+
+int checkMultiHotkeyPressed()
+{
+    // Check if Alt key (VK_MENU), Shift (VK_SHIFT) and Insert (VK_INSERT) are pressed
+    return (GetAsyncKeyState(VK_MENU) & 0x8000) && (GetAsyncKeyState(VK_SHIFT) & 0x8000) && (GetAsyncKeyState(VK_INSERT) & 0x8000);
 }
 
 int main()
@@ -49,19 +55,45 @@ int main()
     mpfr_mul(increment, sensitivity, yaw, MPFR_RNDN);
     // total_counts = revolution / increment;
     mpfr_div(total_counts, revolution, increment, MPFR_RNDN);
-    
 
+    // TESTING TESTING
+    // TODO TESTING DELETE THIS LINE
+    mpfr_t current_sens;
+    mpfr_t prev_curr_sens;
+    mpfr_t ratio;
+    mpfr_init2(current_sens, BIT_PRECISION);
+    mpfr_init2(prev_curr_sens, BIT_PRECISION);
+    mpfr_init2(ratio, BIT_PRECISION);
+    // mpfr_set(current_sens, current_number, MPFR_RNDN);
+    // mpfr_set(prev_curr_sens, prev_curr, MPFR_RNDN);
+    // mpfr_set_str(ratio, "1", MPFR_RNDN);
+    mpfr_set_str(current_sens, "2.6666736602783203125", 10, MPFR_RNDN);
+    mpfr_set_str(prev_curr_sens, "2.666683197021484375", 10, MPFR_RNDN);
+    mpfr_set_str(ratio, "0.533336639404296875", 10, MPFR_RNDN);
+
+    printf("TESTING SENSITIVITY: %s\n", mpfr_to_str(&current_sens, BIT_PRECISION));
+    
+    mpfr_div(current_sens, current_sens, prev_curr_sens, MPFR_RNDN); // ratio
+    printf("REFERENCE Total counts for 360 deg: %s\n", mpfr_to_str(&total_counts, BIT_PRECISION));
+
+    mpfr_mul(ratio, ratio, current_sens, MPFR_RNDN); // new ratio
+    // printf("Ratio: %s\n", mpfr_to_str(&ratio, BIT_PRECISION));
+    mpfr_mul(total_counts, total_counts, ratio, MPFR_RNDN); // new rev
+    printf("TESTING Total counts for 360 deg: %s\n", mpfr_to_str(&total_counts, BIT_PRECISION));
+
+    // TESTING TESTING
+
+    printf("Using these numbers as reference\n");
     printf("Sens: %s | Yaw: %s\n", mpfr_to_str(&sensitivity, BIT_PRECISION), mpfr_to_str(&yaw, BIT_PRECISION));
     printf("Increment: %s deg/count\n", mpfr_to_str(&increment, BIT_PRECISION));
-    printf("Total counts for 360 deg: %s\n", mpfr_to_str(&total_counts, BIT_PRECISION));
-    printf("Press Alt + Insert to do a 360.\n");
-
+    // printf("Total counts for 360 deg: %s\n", mpfr_to_str(&total_counts, BIT_PRECISION));
+    
     // split "total count" to an int and a fractional
     mpfr_t total_counts_int;
     mpfr_t total_counts_fractional;
     mpfr_inits2(BIT_PRECISION, total_counts_int, total_counts_fractional, NULL);
     mpfr_modf(total_counts_int, total_counts_fractional, total_counts, MPFR_RNDN);
-
+    
     // initialize a variable to move certain # pixels every step
     // (instead of moving 1 pixel at a time, very slow, laggy)
     mpfr_t step;
@@ -86,18 +118,20 @@ int main()
             }
         }
         mpfr_clear(remainder);
-
+        
         // if (step >= threshold[0] && step <= threshold[1])
         if (mpfr_cmp_ui(step, threshold[0]) >= 0 && mpfr_cmp_ui(step, threshold[1]) <= 0)
         {
             break;
         }
-
+        
         mpfr_add_ui(step, step, 1, MPFR_RNDN); // step = (int)(step + 1);
         inaccuracy += 1;
     }
-    // printf("step %s\n", mpfr_to_str(&step, BIT_PRECISION));
+    printf("Step %s\n", mpfr_to_str(&step, BIT_PRECISION));
     // printf("inaccuracy by %ld\n", inaccuracy);
+    
+    printf("Press Alt + Insert to do a 360.\n");
 
     // calculate how many steps needed to do 360
     // steps_needed = (total_counts_int + inaccuracy) / step;
@@ -126,46 +160,58 @@ int main()
     //     4a. if so, move 1 pixel.
     while (1)
     {
+        int revolutions = 1;
+        bool pressed = false;
         // 1. wait for hotkey
-        if (checkHotkeyPressed())
+        if (checkMultiHotkeyPressed()) 
+        {
+            revolutions = NUM_REVOLUTIONS_ON_MULTI_PRESS;
+            pressed = true;
+        }
+        if (checkSingleHotkeyPressed() || pressed)
         {
             printf("Hotkey pressed! Simulating revolution...\n");
 
-            // 2. move mouse to do revolution (with inaccuracy)
-            // for (int i = 0; i < steps_needed; i++)
-            for (unsigned long i = 0; i < mpfr_get_ui(steps_needed, MPFR_RNDN) ; i++)
+            for (int i = 0; i < revolutions; i++) 
             {
-                // moveMouseRelative(step, 0);
-                unsigned long moveInt = mpfr_get_ui(step, MPFR_RNDN);
-                printf("%ld under %ld, moving %s, %ld\n", i, mpfr_get_ui(steps_needed, MPFR_RNDN), mpfr_to_str(&step, BIT_PRECISION), moveInt);
-                moveMouseRelative(moveInt, 0);
-                Sleep(1);
-            }
+                // 2. move mouse to do revolution (with inaccuracy)
+                // for (int i = 0; i < steps_needed; i++)
+                for (unsigned long i = 0; i < mpfr_get_ui(steps_needed, MPFR_RNDN) ; i++)
+                {
+                    // moveMouseRelative(step, 0);
+                    unsigned long moveInt = mpfr_get_ui(step, MPFR_RNDN);
+                    moveMouseRelative(moveInt, 0);
+                    Sleep(1);
+                }
 
-            // 3. mouse mouse to fix inaccuracy
-            // perform (-inaccuracy) mouse adjustment
-            if (inaccuracy > 0)
-            {
-                printf("inaccuracy adjustment %ld\n", -inaccuracy);
-                moveMouseRelative(-inaccuracy, 0);
-            }
+                // 3. mouse mouse to fix inaccuracy
+                // perform (-inaccuracy) mouse adjustment
+                if (inaccuracy > 0)
+                {
+                    // printf("[%d.] inaccuracy adjustment %ld\n", i + 1, -inaccuracy);
+                    moveMouseRelative(-inaccuracy, 0);
+                    Sleep(1);
+                }
 
-            // 4. perform fractional mouse movement
-            // mouse movement function does not allow moving (decimal) amount of pixels
-            // at j revolutions, if fractional sum reaches n*1, then move 1 pixel
-            // 
-            // fractional_sum += total_counts_fractional;
-            mpfr_add(fractional_sum, fractional_sum, total_counts_fractional, MPFR_RNDN);
-            // double fractional_sum_floor = floor(fractional_sum);
-            mpfr_floor(fractional_sum_floor, fractional_sum);
+                // 4. perform fractional mouse movement
+                // mouse movement function does not allow moving (decimal) amount of pixels
+                // at j revolutions, if fractional sum reaches n*1, then move 1 pixel
+                // 
+                // fractional_sum += total_counts_fractional;
+                mpfr_add(fractional_sum, fractional_sum, total_counts_fractional, MPFR_RNDN);
+                // double fractional_sum_floor = floor(fractional_sum);
+                mpfr_floor(fractional_sum_floor, fractional_sum);
 
-            printf("sum %s, floor %s, k %ld\n", mpfr_to_str(&fractional_sum, BIT_PRECISION), mpfr_to_str(&fractional_sum_floor, BIT_PRECISION), j);
-            // if ((int)fractional_sum_floor > j)
-            if (mpfr_get_ui(fractional_sum_floor, MPFR_RNDN) > j)
-            {
-                j++;
-                printf("fractional adjustment\n");
-                moveMouseRelative(1, 0);
+                // printf("sum %s, floor %s, k %ld\n", mpfr_to_str(&fractional_sum, BIT_PRECISION), mpfr_to_str(&fractional_sum_floor, BIT_PRECISION), j);
+                // if ((int)fractional_sum_floor > j)
+                if (mpfr_get_ui(fractional_sum_floor, MPFR_RNDN) > j)
+                {
+                    j++;
+                    printf("[%d.] fractional adjustment\n", i + 1);
+                    moveMouseRelative(1, 0);
+                    Sleep(1);
+                }
+                printf("[%d.] Success!\n", i + 1);
             }
         }
 

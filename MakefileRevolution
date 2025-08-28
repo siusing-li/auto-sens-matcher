@@ -1,7 +1,8 @@
 CC = gcc
 
 # add compiler flags
-CFLAGS = -Wall -Wextra -IC:/opencv_2.4/opencv/build/include -g 
+# -Wall -Wextra 
+CFLAGS = -IC:/opencv_2.4/opencv/build/include -g 
 LINKFLAGS = -lmpfr -lgmp -LC:/opencv_2.4/opencv/build/x64/vc14/lib -lopencv_core2413 -lopencv_highgui2413 -lopencv_imgproc2413 
 
 # add the directory of your source files

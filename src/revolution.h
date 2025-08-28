@@ -7,6 +7,8 @@
 #include <dinput.h>
 #include "panorama.h"
 
+#define NUM_REVOLUTIONS_ON_MULTI_PRESS 22
+
 // Initialize DirectInput method
 LPDIRECTINPUT8 pDI;          // DirectInput interface
 LPDIRECTINPUTDEVICE8 pMouse; // Mouse device
@@ -15,6 +17,6 @@ LPDIRECTINPUTDEVICE8 pMouse; // Mouse device
 void moveMouseRelative(int dx, int dy);
 
 // check if both Alt and Insert keys are pressed
-int checkHotkeyPressed();
+int checkSingleHotkeyPressed();
 
 #endif // REVOLUTION_H
