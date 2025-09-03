@@ -44,12 +44,12 @@ void askStringUserInput(
 );
 
 // ask user, set min, base, and max number
-void askInitialValues(mpfr_t *current_number, mpfr_t *low_number, mpfr_t *high_number, mpfr_t *base_number);
+void askInitialValues(mpfr_t *current_number, mpfr_t *low_number, mpfr_t *high_number, mpfr_t *base_number, mpfr_t *ratio);
 
 // copy string value to clipboard
 void copy_to_clipboard(const char *text);
 
 // print all current state of numbers
-void printCurrentNumbers(mpfr_t *low_number, mpfr_t *high_number, mpfr_t *current_number);
+void printCurrentNumbers(mpfr_t *low_number, mpfr_t *high_number, mpfr_t *current_number, mpfr_t *ratio);
 
 #endif // STREAM_H

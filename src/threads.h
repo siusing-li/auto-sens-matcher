@@ -3,7 +3,7 @@
 
 #include <pthread.h>
 #include <stdio.h>
-#include "revolution.h"
 #include "binary.h"
+#include "revolution.h"
 
 #endif // THREADS_H

@@ -13,16 +13,16 @@
     // the previous step is saved as the previous previous step
     // current state is saved before overwriting them, as the previous step for next iteration
 void trickleDownPreviousState(
-    mpfr_t *current_number, mpfr_t *low_number, mpfr_t *high_number, 
-    mpfr_t *prev_curr, mpfr_t *prev_low, mpfr_t *prev_high, 
-    mpfr_t *prev_prev_curr, mpfr_t *prev_prev_low, mpfr_t *prev_prev_high
+    mpfr_t *current_number, mpfr_t *low_number, mpfr_t *high_number, mpfr_t *ratio, 
+    mpfr_t *prev_curr, mpfr_t *prev_low, mpfr_t *prev_high, mpfr_t *prev_ratio, 
+    mpfr_t *prev_prev_curr, mpfr_t *prev_prev_low, mpfr_t *prev_prev_high, mpfr_t *prev_prev_ratio
 );
 
 // undo function
 void undoCurrentState(
-    mpfr_t *current_number, mpfr_t *low_number, mpfr_t *high_number, 
-    mpfr_t *prev_curr, mpfr_t *prev_low, mpfr_t *prev_high, 
-    mpfr_t *prev_prev_curr, mpfr_t *prev_prev_low, mpfr_t *prev_prev_high
+    mpfr_t *current_number, mpfr_t *low_number, mpfr_t *high_number, mpfr_t *ratio, 
+    mpfr_t *prev_curr, mpfr_t *prev_low, mpfr_t *prev_high, mpfr_t *prev_ratio, 
+    mpfr_t *prev_prev_curr, mpfr_t *prev_prev_low, mpfr_t *prev_prev_high, mpfr_t *prev_prev_ratio
 );
 
 // reset the loop for next iteration

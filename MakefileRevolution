@@ -10,7 +10,7 @@ SRC_DIR = ./src
 OBJ_DIR = ./obj
 
 # add your source files here
-SRCS = revolution.c panorama.c vision.c mpfr.c stream.c hotkey.c
+SRCS = revolution.c panorama.c vision.c mpfr.c stream.c hotkey.c threads.c
 
 # converts the source files to object files
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
@@ -32,7 +32,6 @@ $(EXE): $(OBJS)
 	$(CC) $(OBJS) -o $(EXE) $(LINKFLAGS)
 
 clean:
-	rm -f $(OBJ_DIR)/*.o $(EXE)
-	rmdir $(OBJ_DIR)
+	rm -f $(OBJS) $(EXE)
 
 # cl main.c /I C:\opencv\build\include /I C:\opencv\build\include\opencv /I C:\opencv\build\include\opencv2 ^ /link /LIBPATH:C:\opencv\build\x64\vc12\lib opencv_core249.lib opencv_highgui249.lib opencv_imgproc249.lib

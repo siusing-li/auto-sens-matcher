@@ -108,7 +108,7 @@ void askStringUserInput(char **prompt, char *input, char **valid_inputs_list, co
 {
     char *buffer = (char *)calloc(BUFFER_SIZE, sizeof(char));
     // char *stream = (char *)calloc(BUFFER_SIZE, sizeof(char));
-    
+
     while (1)
     {
         printf(COLOR_BLUE "%s" COLOR_RESET, *prompt);
@@ -146,7 +146,7 @@ void askStringUserInput(char **prompt, char *input, char **valid_inputs_list, co
     buffer = NULL;
 }
 
-void askInitialValues(mpfr_t *current_number, mpfr_t *low_number, mpfr_t *high_number, mpfr_t *base_number)
+void askInitialValues(mpfr_t *current_number, mpfr_t *low_number, mpfr_t *high_number, mpfr_t *base_number, mpfr_t *ratio)
 {
     // get base number
     char *base_number_prompt = "Please enter a base number/decimal value: ";
@@ -155,7 +155,7 @@ void askInitialValues(mpfr_t *current_number, mpfr_t *low_number, mpfr_t *high_n
 
     // setting default values
     mpfr_set(*current_number, *base_number, MPFR_RNDN);
-    mpfr_set_d(*low_number, 0.0, MPFR_RNDN);
+    mpfr_set_str(*low_number, "0.0", 10, MPFR_RNDN);
     mpfr_set(*high_number, *base_number, MPFR_RNDN);
 
     // get min number
@@ -183,6 +183,8 @@ void askInitialValues(mpfr_t *current_number, mpfr_t *low_number, mpfr_t *high_n
         printf("Greater than or equal to your base number.\n");
     }
     mpfr_printf("MAX number set to: %s\n", mpfr_to_str(high_number, BIT_PRECISION));
+
+    mpfr_set_str(*ratio, "1.0", 10, MPFR_RNDN);
 }
 
 void copy_to_clipboard(const char *text)
@@ -198,7 +200,7 @@ void copy_to_clipboard(const char *text)
     CloseClipboard();
 }
 
-void printCurrentNumbers(mpfr_t *low_number, mpfr_t *high_number, mpfr_t *current_number)
+void printCurrentNumbers(mpfr_t *low_number, mpfr_t *high_number, mpfr_t *current_number, mpfr_t *ratio)
 {
     mpfr_printf("Low Number: %s\n", mpfr_to_str(low_number, BIT_PRECISION));
     mpfr_printf("High Number: %s\n", mpfr_to_str(high_number, BIT_PRECISION));
