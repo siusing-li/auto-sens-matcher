@@ -9,7 +9,6 @@
 #include "panorama.h"
 #include "hotkey.h"
 
-
 int parseArgs(int *argc, char ***argv, int numArgs);
 
 // move cursor "dx" and "dy" pixels relative to its current position
