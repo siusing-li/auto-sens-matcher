@@ -6,6 +6,7 @@
 #include <math.h>
 #include <dinput.h>
 #include "panorama.h"
+#include "hotkey.h"
 
 #define NUM_REVOLUTIONS_ON_MULTI_PRESS 22
 
@@ -15,8 +16,5 @@ LPDIRECTINPUTDEVICE8 pMouse; // Mouse device
 
 // move cursor "dx" and "dy" pixels relative to its current position
 void moveMouseRelative(int dx, int dy);
-
-// check if both Alt and Insert keys are pressed
-int checkSingleHotkeyPressed();
 
 #endif // REVOLUTION_H

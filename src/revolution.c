@@ -19,18 +19,6 @@ void moveMouseRelative(int dx, int dy)
      SetCursorPos(currentPos.x + x, currentPos.y + y);
  }*/
 
-int checkSingleHotkeyPressed()
-{
-    // Check if Alt key (VK_MENU) and Insert (VK_INSERT) are pressed
-    return (GetAsyncKeyState(VK_MENU) & 0x8000) && (GetAsyncKeyState(VK_INSERT) & 0x8000);
-}
-
-int checkMultiHotkeyPressed()
-{
-    // Check if Alt key (VK_MENU), Shift (VK_SHIFT) and Insert (VK_INSERT) are pressed
-    return (GetAsyncKeyState(VK_MENU) & 0x8000) && (GetAsyncKeyState(VK_SHIFT) & 0x8000) && (GetAsyncKeyState(VK_INSERT) & 0x8000);
-}
-
 int main()
 {
     // inputs
@@ -163,12 +151,12 @@ int main()
         int revolutions = 1;
         bool pressed = false;
         // 1. wait for hotkey
-        if (checkMultiHotkeyPressed()) 
+        if (checkMultiRevolutionHotkeyPressed()) 
         {
             revolutions = NUM_REVOLUTIONS_ON_MULTI_PRESS;
             pressed = true;
         }
-        if (checkSingleHotkeyPressed() || pressed)
+        if (checkRevolutionHotkeyPressed() || pressed)
         {
             printf("Hotkey pressed! Simulating revolution...\n");
 

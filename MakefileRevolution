@@ -10,7 +10,7 @@ SRC_DIR = ./src
 OBJ_DIR = ./obj
 
 # add your source files here
-SRCS = revolution.c panorama.c vision.c mpfr.c stream.c
+SRCS = revolution.c panorama.c vision.c mpfr.c stream.c hotkey.c
 
 # converts the source files to object files
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)

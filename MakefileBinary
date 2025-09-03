@@ -1,14 +1,15 @@
 CC = gcc
 
 # add compiler flags
-CFLAGS = -Wall -Wextra -lmpfr -lgmp -g
+CFLAGS = -IC:/opencv_2.4/opencv/build/include -g 
+LINKFLAGS = -lmpfr -lgmp -LC:/opencv_2.4/opencv/build/x64/vc14/lib -lopencv_core2413 -lopencv_highgui2413 -lopencv_imgproc2413 
 
 # add the directory of your source files
 SRC_DIR = ./src
 OBJ_DIR = ./obj
 
 # add your source files here
-SRCS = binary.c mpfr.c stream.c 
+SRCS = binary.c mpfr.c stream.c hotkey.c
 
 # converts the source files to object files
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
@@ -27,7 +28,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 # create executable with all object files linked
 $(EXE): $(OBJS)
-	$(CC) $(OBJS) -o $(EXE) $(CFLAGS)
+	$(CC) $(OBJS) -o $(EXE) $(LINKFLAGS)
 
 clean:
 	rm -f $(OBJ_DIR)/*.o $(EXE)

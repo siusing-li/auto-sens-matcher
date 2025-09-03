@@ -3,6 +3,10 @@
 #include "mpfr.h"
 #include "stream.h"
 #include "revolution.h"
+#include "hotkey.h"
+
+// cm/360 = 2.54 * 360 / (increment * CPI)
+// different fov = turn_2 : inputs.turn_1 * Math.tan(inputs.fov_1 / 2 / 180 * Math.PI) / Math.tan(inputs.fov_2 / 2 / 180 * Math.PI)
 
 // input: 
 //    base sens
@@ -28,7 +32,7 @@ int main() {
     askInitialValues(&base_number, &low_number, &high_number, &current_number);
 
     // high or low input prompt
-    char *high_low_prompt = "Please specify whether current value was \"low\" (1) or \"high\" (h) or \"perfect\" (p). You can also \"undo\" or \"exit\": ";
+    char *high_low_prompt = "Please specify whether current value was \"low\" (l, Alt + Shift + Up) or \"high\" (h, Alt + Shift + Down) or \"perfect\" (p). You can also \"undo\" or \"exit\": ";
     char *valid_inputs_list[] = {"low", "l", "high", "h", "perfect", "p", "undo", "u", "exit"};
 
     // save current values in case of undo
@@ -48,7 +52,7 @@ int main() {
         askStringUserInput(&high_low_prompt, input, valid_inputs_list, 9);
         
         if (strcmp(input, "l") == 0 || strcmp(input, "low") == 0) {
-            printf("Too low, adjusting value:\n");
+            printf("Too low, adjusting to higher value:\n");
             trickleDownPreviousState(
                 &current_number, &low_number, &high_number, 
                 &prev_curr, &prev_low, &prev_high, 
@@ -57,7 +61,7 @@ int main() {
             // low_number = current_number
             mpfr_set(low_number, current_number, MPFR_RNDN);
         } else if (strcmp(input, "h") == 0 || strcmp(input, "high") == 0) {
-            printf("Too high, adjusting value:\n");
+            printf("Too high, adjusting to lower value:\n");
             trickleDownPreviousState(
                 &current_number, &low_number, &high_number, 
                 &prev_curr, &prev_low, &prev_high, 

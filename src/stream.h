@@ -9,6 +9,7 @@
 #include <mpfr.h>
 #include <windows.h>
 #include "global.h"
+#include "hotkey.h"
 
 #define COLOR_RED     "\033[31m"
 #define COLOR_GREEN   "\033[32m"
