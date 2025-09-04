@@ -10,19 +10,18 @@
 int checkRevolutionHotkeyPressed();
 
 // hotkey for doing multiple revolutions
-// check if Alt + Shift + Insert is pressed
 int checkMultiRevolutionHotkeyPressed();
 
 // hotkey for increasing the current value in binary search
-// check if Alt + Shift + Up
-int checkLowValueHotkeyPressed(char **stream, char **prompt);
+int checkLowValueHotkeyPressed();
 
 // hotkey for decreasing the current value in binary search
-// check if Alt + Shift + Down
-int checkHighValueHotkeyPressed(char **stream, char **prompt);
+int checkHighValueHotkeyPressed();
 
 // hotkey for undoing the previous action in binary search
-// check if Alt + Shift + Left
-int checkUndoHotkeyPressed(char **stream, char **prompt);
+int checkUndoHotkeyPressed();
+
+// hotkey for exiting the program
+int checkExitHotkeyPressed();
 
 #endif // HOTKEY_H

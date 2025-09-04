@@ -3,57 +3,40 @@
 int checkRevolutionHotkeyPressed()
 {
     // Check if Alt key (VK_MENU) and Insert (VK_INSERT) are pressed
-    return (GetAsyncKeyState(VK_MENU) & 0x8000) && (GetAsyncKeyState(VK_INSERT) & 0x8000);
+    return (GetAsyncKeyState(VK_MENU) & 0x8000) && (GetAsyncKeyState(VK_INSERT) & 0x8000) != 0;
 }
 
 int checkMultiRevolutionHotkeyPressed()
 {
     // Check if Alt key (VK_MENU), Shift (VK_SHIFT) and Insert (VK_INSERT) are pressed
-    return (GetAsyncKeyState(VK_MENU) & 0x8000) && (GetAsyncKeyState(VK_SHIFT) & 0x8000) && (GetAsyncKeyState(VK_INSERT) & 0x8000);
+    return (GetAsyncKeyState(VK_MENU) & 0x8000) && (GetAsyncKeyState(VK_SHIFT) & 0x8000) && (GetAsyncKeyState(VK_INSERT) & 0x8000) != 0;
 }
 
-int checkLowValueHotkeyPressed(char **stream, char **prompt)
+int checkLowValueHotkeyPressed()
 {
 
-    // Alt + Shift + Up
-    if ((GetAsyncKeyState(VK_MENU) & 0x8000) && (GetAsyncKeyState(VK_SHIFT) & 0x8000) && (GetAsyncKeyState(VK_UP) & 0x8000))
-    {
-        *stream = *prompt;
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
+    // Alt + Shift + Plus
+    return (GetAsyncKeyState(VK_MENU) & 0x8000) && (GetAsyncKeyState(VK_SHIFT) & 0x8000) && (GetAsyncKeyState(VK_OEM_PLUS) & 0x8000) != 0;
 }
 
-int checkHighValueHotkeyPressed(char **stream, char **prompt)
+int checkHighValueHotkeyPressed()
 {
 
-    // Alt + Shift + Down
-    if ((GetAsyncKeyState(VK_MENU) & 0x8000) && (GetAsyncKeyState(VK_SHIFT) & 0x8000) && (GetAsyncKeyState(VK_DOWN) & 0x8000))
-    {
-        *stream = *prompt;
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
+    // Alt + Shift + Minus
+    return(GetAsyncKeyState(VK_MENU) & 0x8000) && (GetAsyncKeyState(VK_SHIFT) & 0x8000) && (GetAsyncKeyState(VK_OEM_MINUS) & 0x8000) != 0;
 }
 
-int checkUndoHotkeyPressed(char **stream, char **prompt)
+int checkUndoHotkeyPressed()
 {
 
-    // Alt + Shift + Left
-    if ((GetAsyncKeyState(VK_MENU) & 0x8000) && (GetAsyncKeyState(VK_SHIFT) & 0x8000) && (GetAsyncKeyState(VK_LEFT) & 0x8000))
-    {
-        *stream = *prompt;
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
+    // Alt + Shift + Backspace
+    return (GetAsyncKeyState(VK_MENU) & 0x8000) && (GetAsyncKeyState(VK_SHIFT) & 0x8000) && (GetAsyncKeyState(VK_BACK) & 0x8000) != 0;
+}
+
+int checkExitHotkeyPressed()
+{
+
+    // Alt + Shift + '\' (Backslash)
+    return (GetAsyncKeyState(VK_MENU) & 0x8000) && (GetAsyncKeyState(VK_SHIFT) & 0x8000) && (GetAsyncKeyState(VK_OEM_5) & 0x8000) != 0;
 }
 

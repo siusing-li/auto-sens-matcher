@@ -4,17 +4,22 @@
 
 int main(int argc, char **argv)
 {
-    // [0] = program name, [1-3] = 3 valid args
-    parseArgs(&argc, &argv, 3 + 1);
+    checkProgramParameters(&argc, &argv, 4 + 1);
+    // checkProgramParameters(&argc, &argv, 5 + 1);
+
     // inputs
-    mpfr_t sensitivity;
-    mpfr_t yaw;
-    mpfr_t ratio;
+    mpfr_t sensitivity;                                         // argv[1]
+    mpfr_t yaw;                                                 // argv[2]
+    mpfr_t ratio;                                               // argv[3]
+    bool force = strcmp(argv[argc - 1], "1") == 0;              // argv[4]
+    // long long revolution_threshold_max = str_to_ulong(argv[5]); // argv[5]
+    
 
     // calculations
     mpfr_t revolution;
     mpfr_t increment;
     mpfr_t total_counts;
+
     // init all variables
     mpfr_inits2(BIT_PRECISION, sensitivity, yaw, revolution, increment, total_counts, ratio, NULL);
 
@@ -31,9 +36,9 @@ int main(int argc, char **argv)
     // total_counts = revolution / increment;
     mpfr_div(total_counts, revolution, increment, MPFR_RNDN);
 
-    printf("REFERENCE Total counts for 360 deg: %s\n", mpfr_to_str(&total_counts, BIT_PRECISION));
+    // printf("REFERENCE Total counts for 360 deg: %s\n", mpfr_to_str(&total_counts, BIT_PRECISION));
     mpfr_mul(total_counts, total_counts, ratio, MPFR_RNDN); // new rev
-    printf("TESTING Total counts for 360 deg: %s\n", mpfr_to_str(&total_counts, BIT_PRECISION));
+    // printf("TESTING Total counts for 360 deg: %s\n", mpfr_to_str(&total_counts, BIT_PRECISION));
 
     printf("Using these numbers as reference with ratio of %s\n", mpfr_to_str(&ratio, BIT_PRECISION));
     printf("Sens: %s | Yaw: %s\n", mpfr_to_str(&sensitivity, BIT_PRECISION), mpfr_to_str(&yaw, BIT_PRECISION));
@@ -63,7 +68,7 @@ int main(int argc, char **argv)
         for (unsigned long i = threshold[1]; i >= threshold[0]; i--)
         {
             mpfr_fmod_ui(remainder, step, i, MPFR_RNDN); // get remainder of step / i
-            if (mpfr_get_ui(remainder, MPFR_RNDN) == 0) // check remainder (`step % i`) == 0
+            if (mpfr_get_ui(remainder, MPFR_RNDN) == 0)  // check remainder (`step % i`) == 0
             {
                 mpfr_set_ui(step, i, MPFR_RNDN); // step = i;
                 break;
@@ -80,10 +85,12 @@ int main(int argc, char **argv)
         mpfr_add_ui(step, step, 1, MPFR_RNDN); // step = (int)(step + 1);
         inaccuracy += 1;
     }
-    printf("Step %s\n", mpfr_to_str(&step, BIT_PRECISION));
-    // printf("inaccuracy by %ld\n", inaccuracy);
+    // printf("Step %s\n", mpfr_to_str(&step, BIT_PRECISION));
 
-    printf("Press Alt + Insert to do a 360.\n");
+    if (!force) 
+    {
+        printf("Press Alt + Insert to do a 360.\n");
+    }
 
     // calculate how many steps needed to do 360
     // steps_needed = (total_counts_int + inaccuracy) / step;
@@ -113,7 +120,7 @@ int main(int argc, char **argv)
     unsigned long revolution_threshold[] = {20, 30};
     while (1)
     {
-        int max_revolutions = 1;    
+        int max_revolutions = 1;
         bool multi_pressed = false;
         // 1. wait for hotkey
         if (checkMultiRevolutionHotkeyPressed())
@@ -122,9 +129,9 @@ int main(int argc, char **argv)
             // max_revolutions = NUM_REVOLUTIONs_ON_MULTI_PRESS;
             multi_pressed = true;
         }
-        if (checkRevolutionHotkeyPressed() || multi_pressed)
+        if (force || checkRevolutionHotkeyPressed() || multi_pressed)
         {
-            printf("Hotkey pressed! Simulating revolution...\n");
+            printf("Simulating revolution...\n");
 
             int i = 0;
             while (i < max_revolutions)
@@ -177,6 +184,10 @@ int main(int argc, char **argv)
         }
 
         Sleep(30); // reduce cpu usage
+        // only run one revolution and quit
+        if (force) {
+            break;
+        }
     }
     exitRevolution(&sensitivity, &yaw, &ratio, &revolution, &increment, &total_counts, &total_counts_int, &total_counts_fractional, &step, &steps_needed, &fractional_sum, &fractional_sum_floor);
     return 0;
@@ -198,25 +209,53 @@ void moveMouseRelative(int dx, int dy)
     SendInput(1, &input, sizeof(INPUT));
 }
 
-/* // SetCurPos method, BETA WIP
- void moveMouseRelative(int x, int y) {
-     POINT currentPos;
-     GetCursorPos(&currentPos);
-     SetCursorPos(currentPos.x + x, currentPos.y + y);
- }*/
+void checkProgramParameters(int *argc, char ***argv, int numArgs)
+{
+    int arg_pass = parseArgs(argc, argv, numArgs);
+    if (arg_pass == 0)
+    {
+        return;
+    }
+    printf(COLOR_RED "Invalid Arguments in program. Try again in this format:\n" COLOR_RESET);
+    if (arg_pass == -1)
+    {
+        printf("-1. Invalid number of arguments, expected %d, got %d\n", numArgs - 1, *argc - 1);
+    }
+    printf("-2. Invalid argument values\n");
+
+    printf(COLOR_GREEN "./revolution.exe (preferred sensitivity in app1) (yaw value of app1) (percentage of your sensitivity) (force?)\n" COLOR_RESET);
+    printf(COLOR_BLUE "1. (preferred sensitivity in app1). accepted inputs: [0 - n] - your sensitivity from app1 - ex: 0.8\n" COLOR_RESET);
+    printf(COLOR_MAGENTA "2. (yaw value of app1). accepted inputs: [0 - n] - the yaw value of that app1 uses - ex: 0.022\n" COLOR_RESET);
+    printf(COLOR_BLUE "3. (percentage of your sensitivity). accepted inputs: [0 - 1] - always \"1\" unless you want this program to perform only a percentage of your sensitivity, input something between 0 and 1 - ex: 0.5 (half of my sensitivity)\n" COLOR_RESET);
+    printf(COLOR_MAGENTA "4. (force?). accepted inputs: [0, 1] - (1 = force a revolution without waiting for hotkey, 0 = wait for hotkey to perform revolution)\n" COLOR_RESET);
+    exit(0);
+}
 
 // check
 int parseArgs(int *argc, char ***argv, int numArgs)
 {
     if (numArgs == *argc)
     {
-        for (int i = 0; i < *argc; i++)
+        for (int i = 1; i < *argc; i++)
         {
             if (!is_valid_float_string((*argv)[i]))
             {
                 return -2;
             }
         }
+        if (strcmp((*argv)[numArgs - 1], "1") != 0 && strcmp((*argv)[numArgs - 1], "0") != 0)
+        {
+            //
+            printf("%d, not 1 or 0\n", (*argv)[4]);
+            //
+            return -2;
+        }
+        // if (str_to_ulong(argv[5]) <= 0)
+        // {
+        //     return -2;
+        // }
+
+        return 0;
     }
     return -1;
 }

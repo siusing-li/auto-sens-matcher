@@ -7,6 +7,7 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include <mpfr.h>
+#include <math.h>
 #include <windows.h>
 #include "global.h"
 #include "hotkey.h"
@@ -25,6 +26,11 @@
 
 // checks string is valid float format
 bool is_valid_float_string(char *str);
+// check string is valid int format
+bool is_valid_int_string(char *str);
+
+// convert string to unsigned long, returns -1 if not int format
+long str_to_ulong(char *str);
 
 // Ask the user for a float value with a message
 void askFloatUserInput(char **prompt, mpfr_t *dest);

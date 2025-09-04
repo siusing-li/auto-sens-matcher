@@ -6,10 +6,10 @@ bool is_valid_float_string(char *str)
     size_t i = 0;
     bool has_digit = false, has_dot = false;
 
-    // Optional leading sign
+    // no leading sign
     if (str[i] == '+' || str[i] == '-')
     {
-        i++;
+        return false;
     }
 
     while (str[i])
@@ -32,6 +32,54 @@ bool is_valid_float_string(char *str)
     }
 
     return has_digit;
+}
+
+bool is_valid_int_string(char *str)
+{
+    size_t i = 0;
+    bool has_digit = false;
+
+    // no leading sign
+    if (str[i] == '+' || str[i] == '-')
+    {
+        return false;
+    }
+
+    while (str[i])
+    {
+        if (isdigit(str[i]))
+        {
+            has_digit = true;
+        }
+        else
+        {
+            return false;
+        }
+        i++;
+    }
+
+    return has_digit;
+}
+
+long str_to_ulong(char *str)
+{
+    if (is_valid_int_string(str))
+    {
+        char *endptr;
+        long src = strtol(str, &endptr, 10);
+
+        // Check if there was any non-numeric character encountered
+        if (*endptr != '\0')
+        {
+            return -1;
+        }
+
+        // TODO TESTING
+        printf("converted %s to %Ld", str, src);
+        // TODO TESTING
+        return src;
+    }
+    return false;
 }
 
 void askFloatUserInput(char **prompt, mpfr_t *dest)
@@ -202,7 +250,10 @@ void copy_to_clipboard(const char *text)
 
 void printCurrentNumbers(mpfr_t *low_number, mpfr_t *high_number, mpfr_t *current_number, mpfr_t *ratio)
 {
+    // TODO TESTING
+    mpfr_printf("Your new sensitivity is " COLOR_BLUE "%s" COLOR_RESET " of your starting sens.\n", mpfr_to_str(ratio, BIT_PRECISION));
+    // TODO TESTING
     mpfr_printf("Low Number: %s\n", mpfr_to_str(low_number, BIT_PRECISION));
     mpfr_printf("High Number: %s\n", mpfr_to_str(high_number, BIT_PRECISION));
-    mpfr_printf(COLOR_GREEN "YOUR NUMBER: %s" COLOR_RESET "\n", mpfr_to_str(current_number, BIT_PRECISION));
+    mpfr_printf(COLOR_GREEN "YOUR NEW SENSITIVITY: %s" COLOR_RESET "\n", mpfr_to_str(current_number, BIT_PRECISION));
 }
